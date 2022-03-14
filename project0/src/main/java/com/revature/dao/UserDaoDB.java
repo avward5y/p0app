@@ -33,7 +33,7 @@ public class UserDaoDB implements UserDao {
 	private static UserType userType;
 	private List<Account> accounts;
 
-	public User addUser(User user) {
+	public User addUser(User user){
 		// TODO Auto-generated method stub
 		conn = ConnectionUtil.getConnection();
 		String query = "insert into p0_user (first_name, last_name, username, password, user_type) vales (?,?,?,?,?)";
@@ -47,6 +47,7 @@ public class UserDaoDB implements UserDao {
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			System.out.println("Please try another username that one appears to be unavailable.");
 		}
 
 		return null;
@@ -123,7 +124,7 @@ public class UserDaoDB implements UserDao {
 
 	public User updateUser(User u) {
 
-		String query = "update p0_user set first_name=?, last_name=?, username=?, password=?, user_type=? where id=?";
+		String query = "update p0_users set first_name=?, last_name=?, username=?, password=?, user_type=? where id=?";
 		try {
 			pstmt = conn.prepareStatement(query);
 			pstmt.setString(1, u.getFirstName());
@@ -154,5 +155,7 @@ public class UserDaoDB implements UserDao {
 		}
 		return status;
 	}
+	
+
 
 }

@@ -1,5 +1,6 @@
 package com.revature.dao;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 import com.revature.beans.User;
@@ -15,6 +16,7 @@ public interface UserDao {
 	 * Inserts a new user into the persistence layer
 	 * @param user the user to insert
 	 * @return the newly added user object
+	 * @throws SQLIntegrityConstraintViolationException 
 	 */
 	public User addUser(User user);
 	

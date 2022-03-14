@@ -7,12 +7,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import com.revature.beans.Account;
 import com.revature.beans.User;
-import com.revature.dao.AccountDao;
 import com.revature.exceptions.OverdraftException;
 import com.revature.utils.ConnectionUtil;
+import com.revature.dao.*;
+
 
 /**
  * This class should contain the business logic for performing operations on Accounts
@@ -25,6 +27,13 @@ public class AccountService {
 	private static Statement stmt;
 	private static PreparedStatement pstmt;
 	private static ResultSet rs;
+	int option = 0;
+	UserDao userDao = new UserDaoDB();
+	AccountDao accountDao = new AccountDaoDB();
+	UserService userService = new UserService(userDao, accountDao);
+//	AccountService accountService = new AccountService(accountDao);
+	Scanner userInput = new Scanner(System.in);
+	
 	
 	public AccountService(AccountDao dao) {
 		conn = ConnectionUtil.getConnection();
@@ -38,6 +47,21 @@ public class AccountService {
 	 */
 	public void withdraw(Account a, Double amount) {
 		
+		String query = "update p0_account set balance=? where id=?";
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setDouble(1, a.getBalance() - amount);
+			pstmt.setObject(2, a.getId());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (!a.isApproved()) 
+			throw new UnsupportedOperationException();
+		
+		
 	}
 	
 	/**
@@ -45,9 +69,21 @@ public class AccountService {
 	 * @throws UnsupportedOperationException if amount is negative
 	 */
 	public void deposit(Account a, Double amount) {
-		if (!a.isApproved()) {
-			throw new UnsupportedOperationException();
+		
+		String query = "update p0_account set balance=? where id=?";
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setDouble(1, a.getBalance() + amount);
+			pstmt.setObject(2, a.getId());
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		if (!a.isApproved()) 
+			throw new UnsupportedOperationException();
+		
 	}
 	
 	/**
@@ -86,5 +122,36 @@ public class AccountService {
 		List<Account> accountList = new ArrayList<Account>();
 		accountList = u.getAccounts();
 		return accountList;
+	}
+	
+	public void userManagementMenu() {
+		Scanner userInput = new Scanner(System.in);
+		option = userInput.nextInt();
+		
+		System.out.println("\t\t\t\t\t\tWelcome to the User Management Console \n \t\t\t\t\t\t     Enter Management Credentials ");
+		System.out.println("Username: ");
+		String managerUser = userInput.nextLine();
+		System.out.println("Password: ");
+		String managerPw = userInput.nextLine();
+		if (managerUser.contentEquals("admin") && managerPw.contentEquals("admin")) {
+			System.out.println("What would you like to do, input the corresponding number:");
+			System.out.println("1) View Users");
+			System.out.println("2) Update User");
+			System.out.println("3) Delete User");
+			System.out.println("4) Approve Accounts");
+		} else {
+			System.out.println("Incorrect Management Credentials, try again.");
+			
+		}
+		
+			switch (option) {
+				case 1:
+					accountDao.getAccounts();
+					
+					break;
+				case 2:
+					userDao.updateUser(null);
+					break;
+      }
 	}
 }

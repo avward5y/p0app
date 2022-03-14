@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.revature.beans.Account;
 import com.revature.beans.Account.AccountType;
+import com.revature.beans.User.UserType;
 import com.revature.beans.User;
 import com.revature.utils.ConnectionUtil;
 
@@ -119,14 +120,27 @@ public class AccountDaoDB implements AccountDao {
 		return accountList;
 	}
 
-	public Account updateAccount(Account a) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+//	public Account approveAccount(Account a) {
+//		// TODO Auto-generated method stub
+//		boolean approval = true;
+//		String query = "update p0_account set approved=?" + approval + ";";
+//		try {
+//			pstmt = conn.prepareStatement(query);
+//			pstmt.setBoolean(1, rs.getBoolean(true));
+//			}catch (SQLException e) {
+//			e.printStackTrace();
+//		} 
+//		return a;
+//	}
 	public boolean removeAccount(Account a) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public Account updateAccount(Account a) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
